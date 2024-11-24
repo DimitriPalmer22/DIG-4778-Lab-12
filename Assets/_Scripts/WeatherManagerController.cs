@@ -8,14 +8,22 @@ public class WeatherManagerController : MonoBehaviour
 {
     #region Serialized Fields
 
+    [SerializeField] private TMP_Text currentCityText;
+    [SerializeField] private TMP_Text weatherInfoText;
+
+    [SerializeField] private Light sunLight;
+
     /// <summary>
     /// List of the different cities that we want to get the weather data for.
     /// </summary>
     [SerializeField] private CityInfo[] cities;
 
+    [Header("Skybox Materials")] [SerializeField]
+    private Material clearSky;
 
-    [SerializeField] private TMP_Text currentCityText;
-    [SerializeField] private TMP_Text weatherInfoText;
+    [SerializeField] private Material cloudySky;
+    [SerializeField] private Material rainySky;
+    [SerializeField] private Material snowySky;
 
     #endregion
 
@@ -57,6 +65,10 @@ public class WeatherManagerController : MonoBehaviour
 
         // Update the text elements on screen
         UpdateText();
+
+        // Update the weather effects
+        if (_weatherData.ContainsKey(CurrentCity))
+            SetWeatherEffects(_weatherData[CurrentCity]);
     }
 
     private void UpdateInput()
@@ -114,5 +126,65 @@ public class WeatherManagerController : MonoBehaviour
     private void SetWeatherInfoText(WeatherInfo weatherInfo)
     {
         weatherInfoText.text = weatherInfo.ToString();
+    }
+
+    private void SetWeatherEffects(WeatherInfo weatherInfo)
+    {
+        // Set the sunlight based on the weather data
+        SetSunlight(weatherInfo);
+
+        // Set the skybox based on the weather data
+        SetSkybox(weatherInfo);
+    }
+
+    private void SetSunlight(WeatherInfo weatherInfo)
+    {
+        // Get the current time
+        var currentTime = DateTime.Now;
+
+        // Get the sunrise and sunset times
+        var sunriseTime = DateTime.Parse(weatherInfo.Sunrise);
+        var sunsetTime = DateTime.Parse(weatherInfo.Sunset);
+
+        // Check if it is daytime
+        // Set the light intensity to full
+        if (currentTime > sunriseTime && currentTime < sunsetTime)
+            sunLight.intensity = 1f;
+
+        // Set the light intensity to 0
+        else
+            sunLight.intensity = 0f;
+    }
+
+    private void SetSkybox(WeatherInfo weatherInfo)
+    {
+        // Set the skybox material based on the weather data
+        switch (weatherInfo.WeatherValue)
+        {
+            case "clear sky":
+                RenderSettings.skybox = clearSky;
+                break;
+
+            case "few clouds":
+            case "scattered clouds":
+            case "broken clouds":
+                RenderSettings.skybox = cloudySky;
+                break;
+
+            case "shower rain ":
+            case "rain":
+            case "thunderstorm":
+            case "mist":
+                RenderSettings.skybox = rainySky;
+                break;
+
+            case "snow":
+                RenderSettings.skybox = snowySky;
+                break;
+
+            default:
+                RenderSettings.skybox = clearSky;
+                break;
+        }
     }
 }

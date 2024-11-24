@@ -689,7 +689,7 @@ MonoBehaviour:
   m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 1
+  m_SoftShadowQuality: 2
 --- !u!1 &786388360
 GameObject:
   m_ObjectHideFlags: 0
@@ -1145,11 +1145,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50f3e22b106b4ea69f0260a5e5b41040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentCityText: {fileID: 786388362}
+  weatherInfoText: {fileID: 400592975}
+  sunLight: {fileID: 410087040}
   cities:
   - {fileID: 11400000, guid: 3fe09d091e0c8f544a103972aebc017f, type: 2}
   - {fileID: 11400000, guid: 7d24d60b933416142956ffff9adab49b, type: 2}
-  currentCityText: {fileID: 786388362}
-  weatherInfoText: {fileID: 400592975}
+  clearSky: {fileID: 2100000, guid: 0d5771081eb9abb43b1792b52260d914, type: 2}
+  cloudySky: {fileID: 2100000, guid: 0e51b3d2f16325549987d8d6070de3a1, type: 2}
+  rainySky: {fileID: 2100000, guid: b5a27fa4b11bfb24cbc6daff3802c229, type: 2}
+  snowySky: {fileID: 2100000, guid: 7b0f2096b49ccfb4f8b47c8084d650fa, type: 2}
 --- !u!1 &2126803509
 GameObject:
   m_ObjectHideFlags: 0
