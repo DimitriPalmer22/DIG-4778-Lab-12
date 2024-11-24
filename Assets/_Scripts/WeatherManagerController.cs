@@ -26,6 +26,9 @@ public class WeatherManagerController : MonoBehaviour
     [SerializeField] private Material rainySky;
     [SerializeField] private Material snowySky;
 
+    [Header("Billboard")] [SerializeField] private GameObject[] billboards;
+    [SerializeField] private string[] imageURLs;
+
     /// <summary>
     /// List of the different cities that we want to get the weather data for.
     /// </summary>
@@ -80,7 +83,12 @@ public class WeatherManagerController : MonoBehaviour
     private void UpdateInput()
     {
         if (Input.GetKeyDown(KeyCode.Space))
+        {
             GetCityData(CurrentCity);
+
+            // Set the billboard texture
+            SetBillboardTexture();
+        }
 
         // Change the city index based on the arrow keys
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
@@ -214,13 +222,37 @@ public class WeatherManagerController : MonoBehaviour
         }
     }
 
+    private void SetBillboardTexture()
+    {
+        // Get the image address randomly from the list of image URLs
+        foreach (var billboard in billboards)
+        {
+            var randomIndex = UnityEngine.Random.Range(0, imageURLs.Length);
+            var imageAddress = imageURLs[randomIndex];
+
+            // Get the image from the web
+            WeatherManager.GetWebImage(this, imageAddress, texture2D =>
+            {
+                // Set the texture of the billboards
+                var bbRenderer = billboard.GetComponent<Renderer>();
+                bbRenderer.material.mainTexture = texture2D;
+            });
+        }
+    }
+
     public void NextCity()
     {
         _cityIndex = (_cityIndex + 1) % cities.Length;
+
+        // Set the billboard texture
+        SetBillboardTexture();
     }
 
     public void PreviousCity()
     {
         _cityIndex = (_cityIndex - 1 + cities.Length) % cities.Length;
+
+        // Set the billboard texture
+        SetBillboardTexture();
     }
 }
