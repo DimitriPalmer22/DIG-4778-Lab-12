@@ -159,26 +159,26 @@ public class WeatherManagerController : MonoBehaviour
     private void SetSkybox(WeatherInfo weatherInfo)
     {
         // Set the skybox material based on the weather data
-        switch (weatherInfo.WeatherValue)
+        switch (weatherInfo.WeatherIcon.Substring(0, 2))
         {
-            case "clear sky":
+            case "01":
                 RenderSettings.skybox = clearSky;
                 break;
 
-            case "few clouds":
-            case "scattered clouds":
-            case "broken clouds":
+            case "02":
+            case "03":
+            case "04":
                 RenderSettings.skybox = cloudySky;
                 break;
 
-            case "shower rain ":
-            case "rain":
-            case "thunderstorm":
-            case "mist":
+            case "09":
+            case "10":
+            case "11":
+            case "50":
                 RenderSettings.skybox = rainySky;
                 break;
 
-            case "snow":
+            case "13":
                 RenderSettings.skybox = snowySky;
                 break;
 
