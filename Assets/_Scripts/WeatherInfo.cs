@@ -126,11 +126,11 @@ public class WeatherInfo
         sb.AppendLine($"Sunrise: {Sunrise}");
         sb.AppendLine($"Sunset: {Sunset}");
 
-        sb.AppendLine($"Temperature: {KelvinToFahrenheit(Temperature)} Fahrenheit");
-        sb.AppendLine($"Min Temperature: {KelvinToFahrenheit(MinTemperature)} Fahrenheit");
-        sb.AppendLine($"Max Temperature: {KelvinToFahrenheit(MaxTemperature)} Fahrenheit");
+        sb.AppendLine($"Temperature: {KelvinToFahrenheit(Temperature):0.00} Fahrenheit");
+        sb.AppendLine($"Min Temperature: {KelvinToFahrenheit(MinTemperature):0.00} Fahrenheit");
+        sb.AppendLine($"Max Temperature: {KelvinToFahrenheit(MaxTemperature):0.00} Fahrenheit");
 
-        sb.AppendLine($"Feels Like: {FeelsLike}");
+        sb.AppendLine($"Feels Like: {KelvinToFahrenheit(FeelsLike):0.00}");
         sb.AppendLine($"Humidity: {Humidity}");
         sb.AppendLine($"Pressure: {Pressure}");
 
@@ -171,7 +171,7 @@ public class WeatherInfo
         return value;
     }
 
-    private static float KelvinToFahrenheit(float kelvin)
+    public static float KelvinToFahrenheit(float kelvin)
     {
         return kelvin * 9 / 5 - 459.67f;
     }

@@ -11,12 +11,13 @@ public class WeatherManagerController : MonoBehaviour
     [SerializeField] private TMP_Text currentCityText;
     [SerializeField] private TMP_Text weatherInfoText;
 
-    [SerializeField] private Light sunLight;
+    [Header("Sun Light Settings")] [SerializeField]
+    private Light sunLight;
 
-    /// <summary>
-    /// List of the different cities that we want to get the weather data for.
-    /// </summary>
-    [SerializeField] private CityInfo[] cities;
+    [SerializeField] private Color nightColor;
+    [SerializeField] private Color dayColor;
+    [SerializeField] private float minIntensity = 5f;
+    [SerializeField] private float maxIntensity = 120f;
 
     [Header("Skybox Materials")] [SerializeField]
     private Material clearSky;
@@ -24,6 +25,11 @@ public class WeatherManagerController : MonoBehaviour
     [SerializeField] private Material cloudySky;
     [SerializeField] private Material rainySky;
     [SerializeField] private Material snowySky;
+
+    /// <summary>
+    /// List of the different cities that we want to get the weather data for.
+    /// </summary>
+    [SerializeField] private CityInfo[] cities;
 
     #endregion
 
@@ -78,10 +84,10 @@ public class WeatherManagerController : MonoBehaviour
 
         // Change the city index based on the arrow keys
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
-            _cityIndex = (_cityIndex - 1 + cities.Length) % cities.Length;
+            PreviousCity();
 
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-            _cityIndex = (_cityIndex + 1) % cities.Length;
+            NextCity();
     }
 
     private void UpdateText()
@@ -139,21 +145,41 @@ public class WeatherManagerController : MonoBehaviour
 
     private void SetSunlight(WeatherInfo weatherInfo)
     {
+        // Set the light color based on the time of day
+
         // Get the current time
         var currentTime = DateTime.Now;
 
+        // Parse the timezone difference
+        var timezoneDiff = int.Parse(weatherInfo.Timezone) / 3600;
+
+        // Adjust the time based on the timezone of the city
+        currentTime = currentTime.AddHours(timezoneDiff);
+
         // Get the sunrise and sunset times
         var sunriseTime = DateTime.Parse(weatherInfo.Sunrise);
+
         var sunsetTime = DateTime.Parse(weatherInfo.Sunset);
 
-        // Check if it is daytime
-        // Set the light intensity to full
-        if (currentTime > sunriseTime && currentTime < sunsetTime)
-            sunLight.intensity = 1f;
+        // Check if it is nighttime
+        if (currentTime < sunriseTime || currentTime > sunsetTime)
+            sunLight.color = nightColor;
 
-        // Set the light intensity to 0
         else
-            sunLight.intensity = 0f;
+            sunLight.color = dayColor;
+
+        // Set the intensity of the lights based on the temperature
+        const float minTemp = 32;
+        const float maxTemp = 100;
+
+        // Get the fahrenheit temperature
+        var tempF = WeatherInfo.KelvinToFahrenheit(weatherInfo.Temperature);
+
+        // Normalize the temperature
+        var normalizedTemp = Mathf.InverseLerp(minTemp, maxTemp, tempF);
+
+        // Set the intensity of the light based on the temperature
+        sunLight.intensity = Mathf.Lerp(minIntensity, maxIntensity, normalizedTemp);
     }
 
     private void SetSkybox(WeatherInfo weatherInfo)
@@ -186,5 +212,15 @@ public class WeatherManagerController : MonoBehaviour
                 RenderSettings.skybox = clearSky;
                 break;
         }
+    }
+
+    public void NextCity()
+    {
+        _cityIndex = (_cityIndex + 1) % cities.Length;
+    }
+
+    public void PreviousCity()
+    {
+        _cityIndex = (_cityIndex - 1 + cities.Length) % cities.Length;
     }
 }
