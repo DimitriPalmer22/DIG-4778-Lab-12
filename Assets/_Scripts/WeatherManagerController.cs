@@ -1,14 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Collections;
 using UnityEngine;
 
 public class WeatherManagerController : MonoBehaviour
 {
+    #region Serialized Fields
+
     /// <summary>
     /// List of the different cities that we want to get the weather data for.
     /// </summary>
     [SerializeField] private CityInfo[] cities;
+
+
+    [SerializeField] private TMP_Text currentCityText;
+    [SerializeField] private TMP_Text weatherInfoText;
+
+    #endregion
+
+    #region Private Fields
 
     /// <summary>
     /// Dictionary to keep track of the weather data for each city.
@@ -26,6 +37,8 @@ public class WeatherManagerController : MonoBehaviour
     /// </summary>
     private int _cityIndex = 0;
 
+    #endregion
+
     /// <summary>
     /// The current city that we are getting the weather data for.
     /// </summary>
@@ -39,6 +52,15 @@ public class WeatherManagerController : MonoBehaviour
 
     private void Update()
     {
+        // Update the input to change the city index
+        UpdateInput();
+
+        // Update the text elements on screen
+        UpdateText();
+    }
+
+    private void UpdateInput()
+    {
         if (Input.GetKeyDown(KeyCode.Space))
             GetCityData(CurrentCity);
 
@@ -48,8 +70,18 @@ public class WeatherManagerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             _cityIndex = (_cityIndex + 1) % cities.Length;
+    }
 
-        Debug.Log($"Current City: {CurrentCity.CityName}, {_cityIndex}");
+    private void UpdateText()
+    {
+        // Update the current city text
+        currentCityText.text = $"{CurrentCity.CityName}, {CurrentCity.CountryCode}";
+
+        // Update the weather info text
+        if (_weatherData.ContainsKey(CurrentCity))
+            SetWeatherInfoText(_weatherData[CurrentCity]);
+        else
+            weatherInfoText.text = "No weather data available!\nPress SPACE to get weather data.";
     }
 
     private void OnXMLDataLoaded(string data)
@@ -77,5 +109,10 @@ public class WeatherManagerController : MonoBehaviour
 
         // Get the weather data for the city
         StartCoroutine(_weatherManager.GetWeatherXML(CurrentCity, OnXMLDataLoaded));
+    }
+
+    private void SetWeatherInfoText(WeatherInfo weatherInfo)
+    {
+        weatherInfoText.text = weatherInfo.ToString();
     }
 }

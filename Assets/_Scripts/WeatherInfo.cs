@@ -126,25 +126,25 @@ public class WeatherInfo
         sb.AppendLine($"Sunrise: {Sunrise}");
         sb.AppendLine($"Sunset: {Sunset}");
 
-        sb.AppendLine($"Temperature: {Temperature}");
-        sb.AppendLine($"Min Temperature: {MinTemperature}");
-        sb.AppendLine($"Max Temperature: {MaxTemperature}");
+        sb.AppendLine($"Temperature: {KelvinToFahrenheit(Temperature)} Fahrenheit");
+        sb.AppendLine($"Min Temperature: {KelvinToFahrenheit(MinTemperature)} Fahrenheit");
+        sb.AppendLine($"Max Temperature: {KelvinToFahrenheit(MaxTemperature)} Fahrenheit");
 
         sb.AppendLine($"Feels Like: {FeelsLike}");
         sb.AppendLine($"Humidity: {Humidity}");
         sb.AppendLine($"Pressure: {Pressure}");
 
-        sb.AppendLine($"Wind Speed: {WindSpeed}");
-        sb.AppendLine($"Wind Gusts: {WindGusts}");
-        sb.AppendLine($"Wind Direction: {WindDirection}");
+        // sb.AppendLine($"Wind Speed: {WindSpeed}");
+        // sb.AppendLine($"Wind Gusts: {WindGusts}");
+        // sb.AppendLine($"Wind Direction: {WindDirection}");
 
         sb.AppendLine($"Clouds: {Clouds}");
         sb.AppendLine($"Visibility: {Visibility}");
         sb.AppendLine($"Precipitation: {Precipitation}");
 
-        sb.AppendLine($"Weather Number: {WeatherNumber}");
-        sb.AppendLine($"Weather Value: {WeatherValue}");
-        sb.AppendLine($"Weather Icon: {WeatherIcon}");
+        // sb.AppendLine($"Weather Number: {WeatherNumber}");
+        sb.AppendLine($"Weather: {WeatherValue}");
+        // sb.AppendLine($"Weather Icon: {WeatherIcon}");
 
         sb.AppendLine($"Last Update: {LastUpdate}");
 
@@ -156,27 +156,23 @@ public class WeatherInfo
         var docNode = node.SelectSingleNode(nodePath);
 
         if (docNode == null)
-        {
-            Debug.LogError($"Node {nodePath} is null!");
             return string.Empty;
-        }
 
         var attribute = docNode.Attributes[attributeName];
 
         if (attribute == null)
-        {
-            Debug.LogError($"Attribute {attributeName} is null!");
             return string.Empty;
-        }
 
         var value = attribute.Value;
 
         if (string.IsNullOrEmpty(value))
-        {
-            Debug.LogError($"Attribute {attributeName} is empty!");
             return string.Empty;
-        }
 
         return value;
+    }
+
+    private static float KelvinToFahrenheit(float kelvin)
+    {
+        return kelvin * 9 / 5 - 459.67f;
     }
 }
