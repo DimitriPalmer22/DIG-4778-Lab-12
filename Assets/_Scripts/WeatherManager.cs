@@ -8,10 +8,12 @@ public class WeatherManager
 {
     private const string apiKey = "4a6ff515e0366186752fd3385a05bc9f";
 
-    private string xmlApi = $"http://api.openweathermap.org/data/2.5/weather?q=Orlando,us&mode=xml&appid={apiKey}";
+    // private string xmlApi = $"http://api.openweathermap.org/data/2.5/weather?q=Orlando,us&mode=xml&appid={apiKey}";
 
     private IEnumerator CallAPI(string url, Action<string> callback)
     {
+        Debug.Log($"Requesting data from {url}");
+
         using var request = UnityWebRequest.Get(url);
 
         yield return request.SendWebRequest();
@@ -32,8 +34,11 @@ public class WeatherManager
         }
     }
 
-    public IEnumerator GetWeatherXML(Action<string> callback)
+    public IEnumerator GetWeatherXML(CityInfo cityInfo, Action<string> callback)
     {
-        return CallAPI(xmlApi, callback);
+        var apiString =
+            $"http://api.openweathermap.org/data/2.5/weather?q={cityInfo.CityName},{cityInfo.CountryCode}&mode=xml&appid={apiKey}";
+
+        return CallAPI(apiString, callback);
     }
 }
