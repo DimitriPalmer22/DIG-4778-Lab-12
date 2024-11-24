@@ -40,7 +40,7 @@ public class WeatherManagerController : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-            StartCoroutine(_weatherManager.GetWeatherXML(CurrentCity, OnXMLDataLoaded));
+            GetCityData(CurrentCity);
 
         // Change the city index based on the arrow keys
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
@@ -55,5 +55,27 @@ public class WeatherManagerController : MonoBehaviour
     private void OnXMLDataLoaded(string data)
     {
         Debug.Log(data);
+
+        // Parse the data for the weather
+        var weatherInfo = new WeatherInfo(data);
+
+        // Add the weather data to the dictionary
+        _weatherData[CurrentCity] = weatherInfo;
+
+        // Log the weather data
+        Debug.Log(weatherInfo.ToString());
+    }
+
+    private void GetCityData(CityInfo cityInfo)
+    {
+        // Check if we already have the weather data for this city
+        if (_weatherData.ContainsKey(cityInfo))
+        {
+            Debug.Log($"Weather data for {cityInfo.CityName} already exists.");
+            return;
+        }
+
+        // Get the weather data for the city
+        StartCoroutine(_weatherManager.GetWeatherXML(CurrentCity, OnXMLDataLoaded));
     }
 }
