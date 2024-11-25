@@ -2170,8 +2170,11 @@ MonoBehaviour:
   - https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz-BmHfl4y5j751P0jl0GRPqCQVwGUIM_ReA&s
   - https://cdn.pixabay.com/photo/2016/04/07/22/09/sun-1314953_1280.png
   cities:
-  - {fileID: 11400000, guid: 3fe09d091e0c8f544a103972aebc017f, type: 2}
+  - {fileID: 11400000, guid: 5c057d48abe8e7e4bbce3cd09c0d9c80, type: 2}
   - {fileID: 11400000, guid: 7d24d60b933416142956ffff9adab49b, type: 2}
+  - {fileID: 11400000, guid: dd0001ad2f4ddeb45aac4cad3e3105d9, type: 2}
+  - {fileID: 11400000, guid: 3fe09d091e0c8f544a103972aebc017f, type: 2}
+  - {fileID: 11400000, guid: 6f5ddf671abf93749b8dd8926fcc352b, type: 2}
 --- !u!1 &1951578097
 GameObject:
   m_ObjectHideFlags: 0
